@@ -1,9 +1,17 @@
 //targets div where profile information is displayed
 const overview = document.querySelector(".overview"); 
+
+//defines username
 const username = "kenna-bramble";
 
 //targets <ul> to display the repos list
 const repoList = document.querySelector(".repo-list");
+
+//selects class of "repos" where ALL repo info appears
+const allReposContainer = document.querySelector(".repos");
+
+//selects class of "repo=data" where INDIVIDUAL repo data will appear
+const repoData = document.querySelector(".repo-data");
 
 
 //Fetch API JSON Data for GitHub profile info
@@ -40,4 +48,47 @@ const displayRepos = function (repos) {
         repoItem.innerHTML = `<h3>${repo.name}</h3>`;
         repoList.append(repoItem);
     }
+};
+
+
+//Add a Click Event
+repoList.addEventListener("click", function (e) {
+    if (e.target.matches("h3")) {
+        const repoName = e.target.innerText;
+        getRepoInfo(repoName);
+    }
+});
+
+
+//Create a Function to Get Specific Repo Info
+const getRepoInfo = async function (repoName) {
+    const fetchInfo = await fetch (`https://api.github.com/repos/${username}/${repoName}`);
+    const repoInfo = await fetchInfo.json();
+    console.log(repoInfo);
+    
+    //Grab Languages
+    const fetchLanguages = await fetch (repoInfo.languages_url);
+    const languageData = await fetchLanguages.json();
+    
+    //Make list of languages
+    const languages = [];
+    for (const language in languageData) {
+        languages.push(language);
+    }
+    displayRepoInfo(repoInfo, languages);
+};
+
+
+//Create a Function to Display Specific Repo Info
+const displayRepoInfo = function (repoInfo, languages) {
+    repoData.innerHTML = "";
+    repoData.classList.remove("hide");
+    allReposContainer.classList.add("hide");
+    const div = document.createElement("div");
+    div.innerHTML = `<h3>Name: ${repoInfo.name}</h3>
+        <p>Description: ${repoInfo.description}</p>
+        <p>Default Branch: ${repoInfo.default_branch}</p>
+        <p>Languages: ${languages.join(", ")}</p>
+        <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>`;
+    repoData.append(div);
 };
