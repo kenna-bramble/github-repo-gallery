@@ -1,22 +1,10 @@
-//targets div where profile information is displayed
+
 const overview = document.querySelector(".overview"); 
-
-//defines username
 const username = "kenna-bramble";
-
-//targets <ul> to display the repos list
 const repoList = document.querySelector(".repo-list");
-
-//selects class of "repos" where ALL repo info appears
 const allReposContainer = document.querySelector(".repos");
-
-//selects class of "repo=data" where INDIVIDUAL repo data will appear
 const repoData = document.querySelector(".repo-data");
-
-//selects the 'Back to Repo Gallery' button
 const viewRepos = document.querySelector(".view-repos");
-
-//selects the input with the "Search by name" placeholder
 const filterInput = document.querySelector(".filter-repos");
 
 
@@ -38,7 +26,7 @@ const displayUserInfo = function (data) {
     gitRepos();
 };
 
-//Fetch Repos, YEAH!
+//Fetch Repos
 const gitRepos = async function () {
     const fetchRepos = await fetch (`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     const repoData = await fetchRepos.json();
@@ -67,7 +55,7 @@ repoList.addEventListener("click", function (e) {
 });
 
 
-//Create a Function to Get Specific Repo Info
+//Function to Get Specific Repo Info
 const getRepoInfo = async function (repoName) {
     const fetchInfo = await fetch (`https://api.github.com/repos/${username}/${repoName}`);
     const repoInfo = await fetchInfo.json();
@@ -86,7 +74,7 @@ const getRepoInfo = async function (repoName) {
 };
 
 
-//Create a Function to Display Specific Repo Info
+//Display Specific Repo Info
 const displayRepoInfo = function (repoInfo, languages) {
     repoData.innerHTML = "";
     repoData.classList.remove("hide");
@@ -102,7 +90,7 @@ const displayRepoInfo = function (repoInfo, languages) {
 };
 
 
-//Add a Click Event to the Back Button
+//Click Event to the Back Button
 viewRepos.addEventListener("click", function() {
     allReposContainer.classList.remove("hide");
     repoData.classList.add("hide");
@@ -110,10 +98,9 @@ viewRepos.addEventListener("click", function() {
 });
 
 
-//Add an Input Event to the Search Box
+//Input Event to the Search Box
 filterInput.addEventListener("input", function (e) {
     const searchText = e.target.value;
-    //console.log(searchText);
     const repos = document.querySelectorAll(".repo");
     const searchLowerText = searchText.toLowerCase();
     for (const repo of repos) {
